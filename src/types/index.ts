@@ -1,3 +1,5 @@
+import { Models } from "appwrite";
+
 export type IContextType = {
   user: IUser;
   isLoading: boolean;
@@ -55,3 +57,5 @@ export type INavLink = {
     username: string;
     password: string;
   };
+
+  export type DocumentList = Models.DocumentList<Models.Document>;

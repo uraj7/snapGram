@@ -15,10 +15,10 @@ import GridPostList from "@/components/ui/shared/GridPostList";
 
 const PostDetails = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>(); // Ensure id is a string
   const { user } = useUserContext();
 
-  const { data: post, isLoading } = useGetPostById(id);
+  const { data: post, isLoading } = useGetPostById(id!); // Add '!' to assert id is not undefined
   const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPosts(
     post?.creator.$id
   );
@@ -29,8 +29,10 @@ const PostDetails = () => {
   );
 
   const handleDeletePost = () => {
-    deletePost({ postId: id, imageId: post?.imageId });
-    navigate(-1);
+    if (id && post?.imageId) {
+      deletePost({ postId: id, imageId: post.imageId });
+      navigate(-1);
+    }
   };
 
   return (
@@ -55,7 +57,7 @@ const PostDetails = () => {
       ) : (
         <div className="post_details-card">
           <img
-            src={post?.imageUrl}
+            src={post.imageUrl}
             alt="creator"
             className="post_details-img"
           />
@@ -63,11 +65,11 @@ const PostDetails = () => {
           <div className="post_details-info">
             <div className="flex-between w-full">
               <Link
-                to={`/profile/${post?.creator.$id}`}
+                to={`/profile/${post.creator.$id}`}
                 className="flex items-center gap-3">
                 <img
                   src={
-                    post?.creator.imageUrl ||
+                    post.creator.imageUrl ||
                     "/assets/icons/profile-placeholder.svg"
                   }
                   alt="creator"
@@ -75,15 +77,15 @@ const PostDetails = () => {
                 />
                 <div className="flex gap-1 flex-col">
                   <p className="base-medium lg:body-bold text-light-1">
-                    {post?.creator.name}
+                    {post.creator.name}
                   </p>
                   <div className="flex-center gap-2 text-light-3">
                     <p className="subtle-semibold lg:small-regular ">
-                      {multiFormatDateString(post?.$createdAt)}
+                      {multiFormatDateString(post.$createdAt)}
                     </p>
                     •
                     <p className="subtle-semibold lg:small-regular">
-                      {post?.location}
+                      {post.location}
                     </p>
                   </div>
                 </div>
@@ -91,8 +93,8 @@ const PostDetails = () => {
 
               <div className="flex-center gap-4">
                 <Link
-                  to={`/update-post/${post?.$id}`}
-                  className={`${user.id !== post?.creator.$id && "hidden"}`}>
+                  to={`/update-post/${post.$id}`}
+                  className={`${user.id !== post.creator.$id && "hidden"}`}>
                   <img
                     src={"/assets/icons/edit.svg"}
                     alt="edit"
@@ -105,7 +107,7 @@ const PostDetails = () => {
                   onClick={handleDeletePost}
                   variant="ghost"
                   className={`ost_details-delete_btn ${
-                    user.id !== post?.creator.$id && "hidden"
+                    user.id !== post.creator.$id && "hidden"
                   }`}>
                   <img
                     src={"/assets/icons/delete.svg"}
@@ -120,9 +122,9 @@ const PostDetails = () => {
             <hr className="border w-full border-dark-4/80" />
 
             <div className="flex flex-col flex-1 w-full small-medium lg:base-regular">
-              <p>{post?.caption}</p>
+              <p>{post.caption}</p>
               <ul className="flex gap-1 mt-2">
-                {post?.tags.map((tag: string, index: string) => (
+                {post.tags.map((tag: string, index: string) => (
                   <li
                     key={`${tag}${index}`}
                     className="text-light-3 small-regular">
@@ -156,6 +158,7 @@ const PostDetails = () => {
 };
 
 export default PostDetails;
+
 
 // import { Button } from '@/components/ui/button';
 // import Loader from '@/components/ui/shared/Loader';

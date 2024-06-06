@@ -356,10 +356,32 @@ export async function searchPosts(searchTerm: string) {
   }
 }
 
+// export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+//   const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
+ 
+//   //Pagination is a way to divide content into separate pages, so you don’t load all the content at once. Instead, you load a few items at a time.
+//   if (pageParam) {
+//     queries.push(Query.cursorAfter(pageParam.toString()));
+//   }
+
+//   try {
+//     const posts = await databases.listDocuments(
+//       appwriteConfig.databaseId,
+//       appwriteConfig.postCollectionId,
+//       queries
+//     );
+
+//     if (!posts) throw Error;
+
+//     return posts;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
 export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
   const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
- 
-  //Pagination is a way to divide content into separate pages, so you don’t load all the content at once. Instead, you load a few items at a time.
+
   if (pageParam) {
     queries.push(Query.cursorAfter(pageParam.toString()));
   }
@@ -378,7 +400,6 @@ export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
     console.log(error);
   }
 }
-
 
 // ============================== GET USERS
 export async function getUsers(limit?: number) {

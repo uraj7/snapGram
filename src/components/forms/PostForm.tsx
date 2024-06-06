@@ -57,7 +57,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                 imageUrl: post?.imageUrl,
             })
 
-            if(!updatePost) {
+            if(!updatedPost) {
                 toast({ title: 'Please try again'})
             }
 
@@ -146,7 +146,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                     <Button type="submit" className="shad-button_primary whitespace-nowrap"
                     disabled={isLoadingCreate || isLoadingUpdate}>
                         {isLoadingCreate || isLoadingUpdate && 'Loading...'}
-                        {action} Post
+                        {action} Post       
                         </Button>
                 </div>
             </form>
