@@ -156,19 +156,21 @@ export const useDeletePost = () => {
 export const useGetPosts = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-    queryFn: getInfinitePosts,
-    getNextPageParam: (lastPage) => {
-      // If there's no data, there are no more pages.
-      if (lastPage && lastPage.documents.length === 0) {
+    queryFn: getInfinitePosts as any, // Assuming getInfinitePosts returns Promise<DocumentList<Document> | undefined>
+    getNextPageParam: (lastPage: any) => {
+      // If there's no data or no documents in the last page, there are no more pages.
+      if (!lastPage || lastPage.documents.length === 0) {
         return null;
       }
 
       // Use the $id of the last document as the cursor.
-      const lastId = lastPage?.documents[lastPage.documents.length - 1].$id;
-      return ""+lastId;
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+      return lastId;
     },
+    initialPageParam: 0, // Example initialPageParam, adjust as per your logic
   });
 };
+
 
 export const useSearchPosts = (searchTerm: string) => {
   return useQuery({
